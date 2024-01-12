@@ -29,12 +29,26 @@ logging.basicConfig(
 )
 
 async def sync(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await send_message("hello world", update, context)
+    text = get_current_message_content(update)
+    command, id = text.split(" ")
+
+    try:
+        id = int(id)
+    except:
+        await send_message("Is not an id!", update, context)
+        return
+    
+    await send_message(id, update, context)
+
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token(tokens.telegram()).build()
+    try:
+        application = ApplicationBuilder().token(tokens.telegram()).build()
     
-    start_handler = CommandHandler('sync', sync)
-    application.add_handler(start_handler)
+        start_handler = CommandHandler('sync', sync)
+        application.add_handler(start_handler)
     
-    application.run_polling()
+        application.run_polling()
+        
+    except KeyboardInterrupt:
+        exit(0)
