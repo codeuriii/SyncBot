@@ -28,8 +28,8 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-async def sync(test: str, update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await send_message(test, update, context)
+async def sync(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await send_message("hello world", update, context)
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(tokens.telegram()).build()
