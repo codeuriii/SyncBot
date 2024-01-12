@@ -1,11 +1,14 @@
 from discord.ext import commands
 import discord as ds
-import os
 import json
 import tokens
 import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
+
+
+intents = ds.Intents.all()
+bot = commands.Bot(command_prefix="$$", intents=intents)
 
 with open("synced.json", "r") as f:
     synced: list = json.load(f)
@@ -64,16 +67,16 @@ async def sync(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message("Succesfuly synced with [nom du channel discord]")
 
+@bot.event
+async def on_ready():
+
+    application = ApplicationBuilder().token(tokens.telegram()).build()
+
+    start_handler = CommandHandler('sync', sync)
+    application.add_handler(start_handler)
+
+    application.run_polling()
+
 
 if __name__ == '__main__':
-    try:
-        application = ApplicationBuilder().token(tokens.telegram()).build()
-    
-        start_handler = CommandHandler('sync', sync)
-        application.add_handler(start_handler)
-    
-        application.run_polling()
-
-    except KeyboardInterrupt:
-        os.system("cls")
-        exit(0)
+    bot.run(tokens.discord())
