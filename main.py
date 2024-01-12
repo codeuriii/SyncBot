@@ -60,10 +60,9 @@ async def sync(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
 
     synced.append(temp)
-
     save_dict()
-    
-    await send_message(id, update, context)
+
+    await send_message("Succesfuly synced with [nom du channel discord]")
 
 
 if __name__ == '__main__':
