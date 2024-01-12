@@ -1,10 +1,18 @@
 from discord.ext import commands
 import discord as ds
 import os
+import json
 import tokens
 import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
+
+with open("synced.json", "r") as f:
+    synced: list = json.load(f)
+
+def save_dict():
+    with open("synced.json", "w") as f:
+        json.dump(synced, f, indent=2)
 
 
 async def send_message(msg: str, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -43,6 +51,17 @@ async def sync(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except:
         await send_message("Is not an id!", update, context)
         return
+    
+    current_id = get_current_channel_id(update)
+
+    temp = {
+        str(id): str(current_id),
+        str(current_id): str(id) 
+    }
+
+    synced.append(temp)
+
+    save_dict()
     
     await send_message(id, update, context)
 
