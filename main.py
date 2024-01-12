@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord as ds
+import os
 import tokens
 import logging
 from telegram import Update
@@ -30,7 +31,12 @@ logging.basicConfig(
 
 async def sync(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = get_current_message_content(update)
-    command, id = text.split(" ")
+
+    try:
+        command, id = text.split(" ")
+    except:
+        await send_message("Please send /sync [id]", update, context)
+        return
 
     try:
         id = int(id)
@@ -49,6 +55,7 @@ if __name__ == '__main__':
         application.add_handler(start_handler)
     
         application.run_polling()
-        
+
     except KeyboardInterrupt:
+        os.system("cls")
         exit(0)
